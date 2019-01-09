@@ -32,11 +32,16 @@ class Incident(models.Model):
     comment = models.CharField(max_length=600, blank=True)
     address = models.CharField(max_length=150, blank=True)
     city = models.CharField(max_length=100, blank=True, choices=KOMMUNER)
-    respondents = models.ManyToManyField(User, through=IncidentUser, )
+
+    def __str__(self):
+        return self.start_datetime + "-"+self.address
 
 
 class Vehicle(models.Model):
     name = models.CharField(max_length=120)
+
+    def __str__(self):
+        return self.name
 
 
 class IncidentUser(models.Model):
@@ -46,6 +51,9 @@ class IncidentUser(models.Model):
     time_left = models.IntegerField(default=0)
     comment = models.CharField(max_length=150, blank=True)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, blank=True)
+
+    def __str__(self):
+        return self.incident+"-"+self.user
 
 
 class IncidentVehicle(models.Model):
@@ -63,5 +71,8 @@ class IncidentVehicle(models.Model):
     km = models.IntegerField(blank=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True)
-    status = models.CharField(blank=True, choices=STATUS)
+    status = models.CharField(max_length=100, blank=True, choices=STATUS)
+
+    def __str__(self):
+        return self.incident+"-"+self.vehicle
 
